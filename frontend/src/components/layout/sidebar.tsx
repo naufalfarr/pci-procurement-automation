@@ -229,7 +229,7 @@ export function Sidebar() {
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-primary" />
 
             <Link href="/packages" className="flex items-center gap-2.5 min-w-0 hover:opacity-95 transition group">
-              <div className="w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center p-1 shadow-xs flex-shrink-0">
+              <div className="w-12 h-9 rounded-md bg-[#efe3b4] border border-border flex items-center justify-center overflow-hidden shadow-xs flex-shrink-0">
                 <img
                   src="/images/pci-icon.png"
                   alt="CV Pustaka Cemerlang Indonesia"
@@ -237,8 +237,8 @@ export function Sidebar() {
                 />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-foreground tracking-tight truncate group-hover:text-primary transition-colors">
-                  Pustaka Cemerlang
+                <span className="text-[11px] font-bold leading-tight text-foreground tracking-tight group-hover:text-primary transition-colors">
+                  Pustaka Cemerlang Indonesia
                 </span>
                 <span className="text-[10px] text-muted-foreground font-mono tracking-wider uppercase truncate">
                   Procurement &amp; SPJ
