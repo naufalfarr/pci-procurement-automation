@@ -15,7 +15,7 @@ def validate_br01_identity_consistency(
     findings: List[RuleFinding] = []
     
     confirmed_school_name = (school_snapshot.get("name") or "").strip().upper()
-    confirmed_company_name = (company_snapshot.get("legal_name") or "").strip().upper()
+    confirmed_company_name = (company_snapshot.get("legal_name") or company_snapshot.get("name") or "").strip().upper()
 
     if not confirmed_school_name:
         findings.append(RuleFinding(

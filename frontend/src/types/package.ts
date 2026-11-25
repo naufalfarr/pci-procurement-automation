@@ -87,13 +87,19 @@ export interface SchoolSnapshot {
 }
 
 export interface CompanySnapshot {
+  id?: string;
   name?: string;
+  legal_name?: string;
   npwp?: string;
   address?: string;
+  city?: string;
+  phone?: string;
   director_name?: string;
   bank_name?: string;
   bank_account_number?: string;
   bank_account_holder?: string;
+  bank_account_name?: string;
+  logo_path?: string | null;
 }
 
 export interface TaxPolicySnapshotItem {

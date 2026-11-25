@@ -448,7 +448,16 @@ async def update_package_revision(
     if payload.school_snapshot is not None:
         revision.school_snapshot = payload.school_snapshot
     if payload.company_snapshot is not None:
-        revision.company_snapshot = payload.company_snapshot
+        comp_snap = dict(payload.company_snapshot)
+        if comp_snap.get("name") and not comp_snap.get("legal_name"):
+            comp_snap["legal_name"] = comp_snap["name"]
+        elif comp_snap.get("legal_name") and not comp_snap.get("name"):
+            comp_snap["name"] = comp_snap["legal_name"]
+        if comp_snap.get("bank_account_holder") and not comp_snap.get("bank_account_name"):
+            comp_snap["bank_account_name"] = comp_snap["bank_account_holder"]
+        elif comp_snap.get("bank_account_name") and not comp_snap.get("bank_account_holder"):
+            comp_snap["bank_account_holder"] = comp_snap["bank_account_name"]
+        revision.company_snapshot = comp_snap
     if payload.tax_policy_snapshot is not None:
         revision.tax_policy_snapshot = payload.tax_policy_snapshot
         if payload.lines is None:

@@ -271,7 +271,7 @@ def build_generation_context(
             "letterhead_path": school_snap.get("letterhead_path"),
         },
         "company": {
-            "legal_name": company_snap.get("legal_name") or "CV. PUSTAKA CEMERLANG INDONESIA",
+            "legal_name": company_snap.get("legal_name") or company_snap.get("name") or "CV. PUSTAKA CEMERLANG INDONESIA",
             "director_name": company_snap.get("director_name") or "Bambang Solifian",
             "address": company_snap.get("address") or "Jl. Raya Bekasi KM 24 Jakarta",
             "city": company_snap.get("city") or "Jakarta",
@@ -279,7 +279,7 @@ def build_generation_context(
             "npwp": company_snap.get("npwp") or "01.234.567.8-012.000",
             "bank_name": company_snap.get("bank_name") or "BANK DKI",
             "bank_account_number": company_snap.get("bank_account_number") or "300.21.00000.1",
-            "bank_account_name": company_snap.get("bank_account_name") or "CV PUSTAKA CEMERLANG INDONESIA",
+            "bank_account_name": company_snap.get("bank_account_name") or company_snap.get("bank_account_holder") or "CV PUSTAKA CEMERLANG INDONESIA",
             "logo_path": company_snap.get("logo_path"),
         },
         "officials": {

@@ -200,7 +200,14 @@ export function TabIdentity({
   };
 
   const updateCompany = (field: keyof CompanySnapshot, val: string) => {
-    const updated = { ...company, [field]: val };
+    const updated: CompanySnapshot = { ...company, [field]: val };
+    if (field === "name" || field === "legal_name") {
+      updated.name = val;
+      updated.legal_name = val;
+    } else if (field === "bank_account_holder" || field === "bank_account_name") {
+      updated.bank_account_holder = val;
+      updated.bank_account_name = val;
+    }
     setCompany(updated);
     onIdentityChanged({
       school_snapshot: school,
@@ -307,18 +314,28 @@ export function TabIdentity({
     }
   };
 
-  const handleSelectMasterCompany = async (compId: string) => {
-    const cp = masterCompanies.find((c) => c.id === compId);
+  const handleSelectMasterCompany = async (compId: string, companiesPool?: any[]) => {
+    const pool = companiesPool || masterCompanies;
+    const cp = pool.find((c) => c.id === compId);
     if (!cp) return;
 
+    const resolvedName = cp.legal_name || cp.name || "";
+    const resolvedAccountHolder = cp.bank_account_holder || cp.bank_account_name || "";
+
     const updatedCompany: CompanySnapshot = {
-      ...company,
-      name: cp.legal_name || cp.name,
-      npwp: cp.npwp || company.npwp,
-      director_name: cp.director_name || company.director_name,
-      bank_name: cp.bank_name || company.bank_name,
-      bank_account_number: cp.bank_account_number || company.bank_account_number,
-      bank_account_holder: cp.bank_account_holder || company.bank_account_holder,
+      id: cp.id,
+      name: resolvedName,
+      legal_name: resolvedName,
+      npwp: cp.npwp || "",
+      address: cp.address || "",
+      city: cp.city || "",
+      phone: cp.phone || "",
+      director_name: cp.director_name || "",
+      bank_name: cp.bank_name || "",
+      bank_account_number: cp.bank_account_number || "",
+      bank_account_holder: resolvedAccountHolder,
+      bank_account_name: resolvedAccountHolder,
+      logo_path: cp.logo_path ?? null,
     };
     setCompany(updatedCompany);
 
@@ -379,7 +396,7 @@ export function TabIdentity({
       const cps = await apiClient.getCompanies();
       setMasterCompanies(cps || []);
       if (newComp?.id) {
-        await handleSelectMasterCompany(newComp.id);
+        await handleSelectMasterCompany(newComp.id, cps || []);
       }
     } catch {
       // ignore
@@ -836,7 +853,7 @@ export function TabIdentity({
             <input
               type="text"
               disabled={isReadOnly}
-              value={company.name || "CV Pustaka Cemerlang Indonesia"}
+              value={company.legal_name || company.name || "CV Pustaka Cemerlang Indonesia"}
               onChange={(e) => updateCompany("name", e.target.value)}
               className="w-full px-2.5 py-1.5 bg-background border border-border rounded text-xs outline-none focus:ring-1 focus:ring-ring font-sans"
             />
@@ -901,7 +918,7 @@ export function TabIdentity({
             <input
               type="text"
               disabled={isReadOnly}
-              value={company.bank_account_holder || "CV Pustaka Cemerlang Indonesia"}
+              value={company.bank_account_holder || company.bank_account_name || "CV Pustaka Cemerlang Indonesia"}
               onChange={(e) => updateCompany("bank_account_holder", e.target.value)}
               className="w-full px-2.5 py-1.5 bg-background border border-border rounded text-xs outline-none focus:ring-1 focus:ring-ring font-sans"
             />
