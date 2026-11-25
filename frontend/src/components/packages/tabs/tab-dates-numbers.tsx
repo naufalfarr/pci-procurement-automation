@@ -142,8 +142,13 @@ export function TabDatesNumbers({ revision, isReadOnly, onDataChanged }: TabDate
 
   const handleDateChange = (eventCode: string, newDate: string) => {
     let updatedEvents = [...events];
+    const trimmedDate = (newDate || "").trim();
 
     const setOrUpdate = (code: string, dt: string) => {
+      if (!dt) {
+        updatedEvents = updatedEvents.filter((e) => e.event_code !== code);
+        return;
+      }
       const idx = updatedEvents.findIndex((e) => e.event_code === code);
       if (idx >= 0) {
         updatedEvents[idx] = { ...updatedEvents[idx], event_date: dt };
@@ -152,22 +157,24 @@ export function TabDatesNumbers({ revision, isReadOnly, onDataChanged }: TabDate
       }
     };
 
-    setOrUpdate(eventCode, newDate);
+    setOrUpdate(eventCode, trimmedDate);
 
     // Auto-sync Stage 9: If FAKTUR is modified, keep KWITANSI in sync
     if (eventCode === "FAKTUR") {
-      setOrUpdate("KWITANSI", newDate);
+      setOrUpdate("KWITANSI", trimmedDate);
     } else if (eventCode === "KWITANSI") {
-      setOrUpdate("FAKTUR", newDate);
+      setOrUpdate("FAKTUR", trimmedDate);
     } else if (eventCode === "BAPP") {
-      setOrUpdate("LAMP_BAPP", newDate);
+      setOrUpdate("LAMP_BAPP", trimmedDate);
     } else if (eventCode === "LAMP_BAPP") {
-      setOrUpdate("BAPP", newDate);
+      setOrUpdate("BAPP", trimmedDate);
     }
 
-    // Clean up any orphan legacy alias codes
+    // Clean up any orphan legacy alias codes or blank dates
     updatedEvents = updatedEvents.filter(
-      (e) => !["SPN", "BA_KLARIFIKASI", "SP", "SJ"].includes(e.event_code)
+      (e) =>
+        !["SPN", "BA_KLARIFIKASI", "SP", "SJ"].includes(e.event_code) &&
+        Boolean(e.event_date && e.event_date.trim() !== "")
     );
 
     setEvents(updatedEvents);
@@ -179,17 +186,21 @@ export function TabDatesNumbers({ revision, isReadOnly, onDataChanged }: TabDate
     newNumber: string,
     defaultIssuer: "SCHOOL" | "COMPANY" | "JOINT" = "SCHOOL"
   ) => {
-    const updatedNumbers = [...numbers];
-    const existingIdx = updatedNumbers.findIndex((n) => n.doc_code === docCode);
-    if (existingIdx >= 0) {
-      updatedNumbers[existingIdx] = { ...updatedNumbers[existingIdx], doc_number: newNumber };
+    let updatedNumbers = [...numbers];
+    if (!newNumber.trim()) {
+      updatedNumbers = updatedNumbers.filter((n) => n.doc_code !== docCode);
     } else {
-      updatedNumbers.push({
-        doc_code: docCode,
-        doc_number: newNumber,
-        issuer: defaultIssuer,
-        is_reserved: defaultIssuer === "COMPANY",
-      });
+      const existingIdx = updatedNumbers.findIndex((n) => n.doc_code === docCode);
+      if (existingIdx >= 0) {
+        updatedNumbers[existingIdx] = { ...updatedNumbers[existingIdx], doc_number: newNumber };
+      } else {
+        updatedNumbers.push({
+          doc_code: docCode,
+          doc_number: newNumber,
+          issuer: defaultIssuer,
+          is_reserved: defaultIssuer === "COMPANY",
+        });
+      }
     }
     setNumbers(updatedNumbers);
     onDataChanged({ events, numbers: updatedNumbers });

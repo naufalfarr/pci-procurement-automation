@@ -162,12 +162,18 @@ export default function PackageWorkspacePage() {
         currentVersion = updated.version;
       }
       if (canEditPackageContent && dirtyDates) {
+        const sanitizedEvents = (dirtyDates.events || []).filter(
+          (e: any) => e?.event_date && String(e.event_date).trim() !== ""
+        );
+        const sanitizedNumbers = (dirtyDates.numbers || []).filter(
+          (n: any) => n?.doc_number && String(n.doc_number).trim() !== ""
+        );
         const updated = await apiClient.updateRevisionDetails(
           latestRevision.id,
           {
             expected_version: currentVersion,
-            events: dirtyDates.events,
-            numbers: dirtyDates.numbers,
+            events: sanitizedEvents,
+            numbers: sanitizedNumbers,
           }
         );
         currentVersion = updated.version;
