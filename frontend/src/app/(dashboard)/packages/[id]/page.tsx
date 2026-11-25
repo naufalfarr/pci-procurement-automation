@@ -207,6 +207,7 @@ export default function PackageWorkspacePage() {
       setDirtyLogisticsLines(null);
       await refetchPackage();
       if (canViewInspectionAndDocs) {
+        await apiClient.validateRevision(latestRevision.id).catch(() => null);
         await refetchValidation();
       }
       return currentVersion;

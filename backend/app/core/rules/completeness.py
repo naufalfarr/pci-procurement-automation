@@ -14,6 +14,27 @@ REQUIRED_13_DOCS = [
     "D08", "D09", "D10", "D11", "D12", "D13"
 ]
 
+REQUIRED_CORE_EVENTS = [
+    ("HPS", "D01"),
+    ("SPP", "D02"),
+    ("PENAWARAN", "D03"),
+    ("NEGOSIASI", "D04"),
+    ("PESANAN", "D05"),
+    ("FAKTUR", "D06"),
+    ("KWITANSI", "D07"),
+    ("SURAT_JALAN", "D08"),
+    ("BAPB", "D09"),
+    ("BAST", "D10"),
+    ("BAPP", "D11"),
+]
+
+EVENT_CODE_ALIASES = {
+    "SPN": "PENAWARAN",
+    "BA_KLARIFIKASI": "NEGOSIASI",
+    "SP": "PESANAN",
+    "SJ": "SURAT_JALAN",
+}
+
 
 def validate_br02_completeness(
     doc_numbers: List[Dict[str, Any]],
@@ -41,6 +62,24 @@ def validate_br02_completeness(
                 doc_code=code,
                 field_name="doc_number",
                 message=f"Nomor dokumen untuk jenis '{code}' belum dialokasikan atau belum terdaftar."
+            ))
+
+    existing_events = set()
+    for ev in events or []:
+        raw_code = (ev.get("event_code") or "").upper().strip()
+        canonical_code = EVENT_CODE_ALIASES.get(raw_code, raw_code)
+        ev_date = ev.get("event_date")
+        if canonical_code and ev_date is not None and str(ev_date).strip() != "":
+            existing_events.add(canonical_code)
+
+    for ev_code, doc_code in REQUIRED_CORE_EVENTS:
+        if doc_code in target_docs and ev_code not in existing_events:
+            findings.append(RuleFinding(
+                rule_code="BR02",
+                severity=SeverityEnum.BLOCK,
+                doc_code=doc_code,
+                field_name=f"events[{ev_code}].event_date",
+                message=f"Tanggal dokumen '{ev_code}' ({doc_code}) belum diisi."
             ))
 
     if not lines:
