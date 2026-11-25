@@ -24,11 +24,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
-      { url: "/images/pci-icon.png", sizes: "32x32", type: "image/png" },
-      { url: "/images/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico?v=pci2", sizes: "any" },
+      { url: "/favicon.png?v=pci2", sizes: "64x64", type: "image/png" },
+      { url: "/images/icon-192.png?v=pci2", sizes: "192x192", type: "image/png" },
     ],
-    shortcut: "/favicon.ico",
-    apple: "/images/icon-192.png",
+    shortcut: "/favicon.ico?v=pci2",
+    apple: "/images/icon-192.png?v=pci2",
   },
 };
 

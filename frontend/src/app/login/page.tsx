@@ -99,16 +99,11 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-5 z-10">
         {/* Brand Header with Extracted Official Logo */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <div className="p-3 px-5 rounded-2xl bg-white dark:bg-card border border-border shadow-md flex items-center justify-center">
+          <div className="p-2 px-3 rounded-xl bg-[#efe3af] border border-border shadow-md flex items-center justify-center">
             <img
-              src="/images/pci-logo.png"
-              alt="CV Pustaka Cemerlang"
-              className="h-12 w-auto object-contain dark:hidden"
-            />
-            <img
-              src="/images/pci-logo-white.png"
-              alt="CV Pustaka Cemerlang"
-              className="h-12 w-auto object-contain hidden dark:block"
+              src="/images/pci-logo.png?v=pci2"
+              alt="CV Pustaka Cemerlang Indonesia"
+              className="h-16 w-auto object-contain"
             />
           </div>
           <div>

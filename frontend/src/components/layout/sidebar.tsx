@@ -229,9 +229,9 @@ export function Sidebar() {
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-primary" />
 
             <Link href="/packages" className="flex items-center gap-2.5 min-w-0 hover:opacity-95 transition group">
-              <div className="w-12 h-9 rounded-md bg-[#efe3b4] border border-border flex items-center justify-center overflow-hidden shadow-xs flex-shrink-0">
+              <div className="w-12 h-9 rounded-md bg-[#efe3af] border border-border flex items-center justify-center overflow-hidden shadow-xs flex-shrink-0">
                 <img
-                  src="/images/pci-icon.png"
+                  src="/images/pci-icon.png?v=pci2"
                   alt="CV Pustaka Cemerlang Indonesia"
                   className="w-full h-full object-contain"
                 />
